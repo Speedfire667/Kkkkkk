@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle do Bot Minecraft</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    #viewer { width: 100%; height: 500px; border: 1px solid #000; }
+    #controls { margin-top: 20px; }
+    button { margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Controle do Bot Minecraft</h1>
+  <div id="viewer">
+    <iframe src="http://localhost:3007" width="100%" height="100%"></iframe>
+  </div>
+  <div id="controls">
+    <button onclick="sendCommand('move forward')">Frente</button>
+    <button onclick="sendCommand('move back')">Trás</button>
+    <button onclick="sendCommand('move left')">Esquerda</button>
+    <button onclick="sendCommand('move right')">Direita</button>
+    <button onclick="sendCommand('move stop')">Parar</button>
+    <input type="text" id="chatMessage" placeholder="Mensagem de chat">
+    <button onclick="sendChat()">Enviar</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    function sendCommand(command) {
+      socket.emit('move', command.split(' ')[1]);
+    }
+
+    function sendChat() {
+      const message = document.getElementById('chatMessage').value;
+      socket.emit('chat', message);
+      document.getElementById('chatMessage').value = '';
+    }
+  </script>
+</body>
+</html>
