@@ -1,18 +1,12 @@
 const mineflayer = require('mineflayer');
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
 const { mineflayer: mineflayerViewer } = require('prismarine-viewer');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
+require('./server'); // Adiciona o servidor para manter o bot ativo
 
 const bot = mineflayer.createBot({
-  host: 'kamaga321.aternos.me', // Endereço do servidor
-  port: 11324,                  // Porta do servidor
-  username: 'nome_do_bot',      // Nome do bot
-  version: '1.16.4'             // Versão do Minecraft
+  host: 'kamaga321.aternos.me',
+  port: 11324,
+  username: 'nome_do_bot',
+  version: '1.16.4'
 });
 
 bot.on('spawn', () => {
@@ -56,24 +50,3 @@ function moveBot(direction) {
   }
 }
 
-io.on('connection', (socket) => {
-  console.log('Novo cliente conectado');
-
-  socket.on('move', (direction) => {
-    moveBot(direction);
-  });
-
-  socket.on('chat', (message) => {
-    bot.chat(message);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Cliente desconectado');
-  });
-});
-
-app.use(express.static('public'));
-
-server.listen(3000, () => {
-  console.log('Servidor web disponível em http://localhost:3000');
-});
